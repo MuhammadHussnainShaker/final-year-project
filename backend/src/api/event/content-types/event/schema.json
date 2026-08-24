@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event",
+    "description": "Events for discovery and community engagement"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    },
+    "shortDescription": {
+      "type": "text",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "time": {
+      "type": "string",
+      "required": true
+    },
+    "venue": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "address": {
+      "type": "text"
+    },
+    "imageUrl": {
+      "type": "text",
+      "required": true
+    },
+    "ticketPrice": {
+      "type": "string"
+    },
+    "organizerContact": {
+      "type": "text"
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "events"
+    }
+  }
+}

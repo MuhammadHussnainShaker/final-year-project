@@ -1,0 +1,1499 @@
+/home/muhammadhs/Desktop/FYP/final-year-project/Project File by Supervisor.docx
+
+Project Proposal
+
+Project Title
+Event Discovery & Community Engagement Platform
+
+Project Domain / Category
+Web Application Development / Event Management System / Community Platform
+
+
+Abstract / Introduction
+The proposed project is a web-based Event Discovery and Community Engagement Platform designed to help users find, explore, and participate in local and online events such as workshops, concerts, sports meets, cultural festivals, networking sessions, and community volunteering drives. The system provides a dynamic and user-friendly interface where users can browse upcoming events displayed both on an interactive map and in a structured list view, helping them decide which events to attend based on location, interest, and date.
+
+This application bridges the gap between event organizers and attendees by combining geographic visualization with structured event data. Users can filter events by category, view event details including venue, schedule, ticket information, and organizer contact, and RSVP or register directly through the platform. The system can be extended to include user reviews, social sharing, and personalized event recommendations, making it a comprehensive and scalable solution for real-world community engagement.
+
+
+Functional Requirements
+FR-01: Interactive Map Display
+The system shall display an interactive map interface using a mapping library (such as Leaflet.js or Google Maps API). The map shall load all available events as markers upon page load. Each marker shall be clickable and shall visually distinguish between different event categories using color-coded or icon-based markers. The map shall support zooming, panning, and fitting bounds to show all markers within the viewport.
+
+FR-02: List View of Events
+The system shall provide a structured list view displaying all available events retrieved from the backend API. Each list item shall show the event name, category, thumbnail image, date/time, and a short description. The list shall be paginated or infinitely scrollable to handle large datasets efficiently. The list view and map view shall be synchronized so that hovering or clicking a list item highlights the corresponding marker on the map.
+
+FR-03: Category-Based Filtering
+The system shall provide a filtering mechanism that allows users to filter events by predefined categories such as Music, Sports, Technology, Art & Culture, Food & Drink, Health & Wellness, and Community Service. The filter shall be accessible via a dropdown menu, tab bar, or sidebar panel. Upon selecting a category, both the map markers and the list view shall update dynamically without requiring a full page reload. Multiple category selection shall be supported where applicable.
+
+FR-04: Event Detail Page
+The system shall provide a dedicated detail page for each event, accessible via a unique URL (e.g., /events/:id or /events/:slug). The detail page shall display all available information including the full event name, category, description, venue address, date and time, ticket pricing, organizer contact information, and an embedded mini-map showing the exact event location. The page shall also include a breadcrumb navigation for easy return to the listing page.
+
+FR-05: Images and Descriptions Display
+The system shall display one or more images for each event using an image gallery or carousel component. Images shall be lazily loaded to optimize page performance and reduce initial load time. Each event shall include a short description (used in list and featured views) and a full detailed description displayed on the event detail page. Image alt-text shall be included for accessibility compliance.
+
+FR-06: Map Marker Highlighting
+The system shall visually highlight the map marker of an event when the user selects it from the list view, search results, or featured section. The highlighted marker shall change its icon, size, or color to distinguish it from unselected markers. The map shall automatically pan and center on the selected marker if it is outside the current viewport. A popup or tooltip shall appear displaying the event name, date, and category.
+
+FR-07: Featured Events Section
+The system shall include a dedicated Featured Events section displayed prominently on the homepage or landing page. Featured events shall be manually selected and managed by the admin through the Strapi CMS dashboard. Each featured event card shall display the event name, category, thumbnail image, date, short description, and a "View Details" button linking to the full detail page. The section shall be displayed in a responsive card grid or horizontal scrollable carousel layout.
+
+FR-08: Search Functionality
+The system shall provide a search bar that allows users to search for events by name, category, organizer, or venue keyword. Search queries shall be sent to the backend API, which shall return matching results from the database. Search results shall be displayed in real time or upon submission, updating both the list view and the map markers accordingly. The search bar shall include a clear/reset button to restore the default view. If no results are found, a user-friendly "No results found" message shall be displayed.
+
+FR-09: Address and Basic Details Display
+The system shall display the full address of each event venue including street, city, and region where available. Basic details such as event date, time, category label, ticket price (or 'Free'), and organizer contact shall be visible in both the list card and the detail page. The address shall be formatted consistently across all views and shall optionally include a "Get Directions" link that opens the venue in Google Maps or a native map application.
+
+FR-10: Responsive Interface
+The system shall provide a fully responsive user interface that adapts seamlessly to all screen sizes including mobile phones, tablets, and desktop monitors. The layout shall follow a mobile-first design approach using Tailwind CSS breakpoints. On mobile devices, the map and list view shall be toggled via a tab or floating button rather than displayed side by side. All interactive elements including buttons, filters, and search inputs shall be touch-friendly with appropriate tap target sizes as per accessibility guidelines.
+
+
+The Three Core Roles
+Role 1: Guest User (Unauthenticated)
+This is any visitor who accesses the application without logging in.
+
+What they CAN do:
+    • Browse the interactive map and view all event markers
+    • View the list of all available upcoming and past events
+    • Filter events by category, date range, or location
+    • Use the search functionality to find specific events
+    • View event detail pages (name, description, images, venue, schedule)
+    • View the featured events section on the homepage
+
+What they CANNOT do:
+    • RSVP or register for events
+    • Submit reviews or ratings
+    • Create or submit new events
+    • Access any admin or management features
+
+In Strapi: This maps to the Public role, which has read-only access to published event data via the API.
+
+Role 2: Registered User (Authenticated)
+This is a visitor who has created an account and logged in via NextAuth.js + Strapi authentication.
+
+What they CAN do:
+    • Everything a Guest User can do
+    • RSVP or register for events and receive confirmations
+    • Save or bookmark favorite events to their profile
+    • Submit reviews and ratings for events they have attended
+    • View their personal profile, RSVP history, and saved events list
+    • Update their own account information (name, password, profile picture)
+    • Submit a new event for admin review and approval
+
+What they CANNOT do:
+    • Edit or delete other users' data
+    • Publish or approve submitted events
+    • Access the admin dashboard
+    • Manage categories or system settings
+
+In Strapi: This maps to the Authenticated role, which has read access to all public data plus write access to their own user-specific data such as RSVPs, favorites, and reviews.
+
+Role 3: Administrator (Admin)
+This is a trusted internal user who manages all content and system settings through the Strapi CMS admin dashboard.
+
+What they CAN do:
+    • Full CRUD (Create, Read, Update, Delete) access to all events
+    • Add, edit, or remove event images, descriptions, venues, and schedules
+    • Create, edit, and delete event categories
+    • Mark or unmark events as 'Featured' for the homepage section
+    • Manage all registered user accounts (view, activate, deactivate, delete)
+    • Approve or reject user-submitted event listings
+    • Manage roles and permissions for other users
+    • Configure API access and content visibility settings
+    • Access usage analytics and system logs (if enabled)
+
+What they CANNOT do:
+    • Actions are limited only by system-level server configurations outside Strapi
+
+In Strapi: This maps to the Super Admin or a custom Admin role created inside the Strapi admin panel with full collection-level permissions.
+
+
+Key Features
+    • Dynamic event content management via Headless CMS
+    • User authentication, authorization, and role-based access control
+    • Fully responsive design across all devices
+    • SEO optimization with meta tags and structured data
+    • Image optimization and lazy loading for performance
+    • Real-time data synchronization between map and list views
+    • RSVP and event registration with confirmation notifications
+    • Admin dashboard for complete content and user management
+
+
+Tools & Technology Stack
+Frontend Technology Stack
+Component
+Technology / Tool
+Framework
+Next.js 16+ (React-based)
+Styling
+Tailwind CSS / Styled Components
+State Management
+Context API / Redux
+UI Components
+Shadcn/ui / Material-UI
+Authentication
+NextAuth.js
+Map Library
+Leaflet.js
+Deployment
+Vercel / Netlify
+
+Backend Technology Stack
+Component
+Technology / Tool
+CMS
+Strapi v5 (Headless CMS)
+Database
+PostgreSQL / MySQL
+Authentication
+Strapi built-in auth + JWT
+File Storage
+Cloudinary / AWS S3
+API
+RESTful API / GraphQL
+Deployment
+Railway / DigitalOcean / AWS
+
+
+Supervisor
+
+Name
+Amjad Iqbal Khan
+Email ID
+amjad.iqbal@vu.edu.pk
+Teams ID
+amjadiqbalkhanniazi@outlook.com
+
+
+
+/home/muhammadhs/Desktop/FYP/final-year-project/Approved SRS.docx
+
+Event Discovery & Community Engagement Platform
+Software Requirements Specification
+Version 1.0
+
+Group Id: S26PROJECTC0D01
+Supervisor Name: Amjad Iqbal Khan
+
+Revision History
+Date 
+(dd/mm/yyyy)
+Version
+Description
+Author
+14-05-2026
+1.0
+This SRS is designed to document technical software requirements after properly analyzing the given theme, objective and core features of the Event Discovery & Community Engagement Platform. It includes the scope of the project, functional and non-functional requirements, use case diagram, usage scenarios, adopted software model and work plan section.
+BC250212514
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table of Contents
+    1. Scope of Project:
+    2. Functional and Non-Functional Requirements:
+    3. Use Case Diagram(s):
+    4. Usage Scenarios:
+    5. Adopted Methodology
+    6. Work Plan
+
+SRS Document
+Scope of Project:
+People usually discover events through sources such as social media posts, WhatsApp groups, posters, university notices, and personal contacts. This creates difficulty for users because complete information about event location, date, timing, category, organizer contact, and registration method is often not available in one place. On the other side, event organizers also need a proper platform where they can publish events and reach interested attendees in an organized way.
+In this context, the project aims to develop a web-based application named “Event Discovery & Community Engagement Platform”. The system will provide a centralized platform where users can discover local and online events such as workshops, concerts, sports activities, cultural festivals, networking sessions, technology sessions, food events, health and wellness activities, and volunteering drives. Users will be able to browse approved events through list view and map view, search events, apply filters, view complete event details, RSVP for events, save events for later, and submit new events for administrator approval.
+The Administrator will manage the event content of the platform. Administrator will be able to create, update, delete, approve and reject events, manage categories, manage featured events and review user-submitted events. The system will ensure proper role-based access so that Guest Users can only browse public content, Registered Users can participate and submit events, and Administrators can manage the system.
+The system will focus on usability, security, reliability, maintainability, performance and compatibility so that event discovery and community engagement can be performed smoothly through a web-based environment.
+Timeline: The project should be completed on or before October 27, 2026.
+
+Functional and Non-Functional Requirements:
+Functional Requirements:
+Guest User:
+FR01: Guest Users shall be able to open the homepage without creating an account.
+FR02: The system shall display featured events on the homepage with event title, category, date, image if available, short description, and View Details option.
+FR03: The system shall display only Approved/Published events to Guest Users.
+FR04: Guest Users shall be able to browse approved events in a structured list view.
+FR05: Each event card shall display event title, category, event date, event time, location/mode, image if available, and short description.
+FR06: Guest Users shall be able to browse approved physical events on an interactive map when valid latitude and longitude are available.
+FR07: The system shall display one clickable map marker for each approved physical event with valid coordinates.
+FR08: When a map marker is clicked, the system shall show a popup containing event title, category, date, and View Details option.
+FR09: Guest Users shall be able to search events by event title, organizer name, venue name, city name, or event description keyword.
+FR10: Guest Users shall be able to filter events by category, event mode, and date range.
+FR11: Guest Users shall be able to clear all applied search and filter criteria and return to the default approved events list.
+FR12: If no event matches the search or filter criteria, the system shall display a clear “No events found” message.
+FR13: Guest Users shall be able to open the detail page of an approved event from list view, map popup, or featured event section.
+FR14: The event detail page shall display event title, full description, category, date, time, ticket information, organizer contact, venue address or online meeting information, and event image/gallery.
+FR15: For physical events, the event detail page shall display a mini map and a directions link when venue address or coordinates are available.
+FR16: Guest Users shall not be allowed to RSVP, save/bookmark events, submit new events, or access the administrator area.
+FR17: If a Guest User tries to RSVP or save an event, the system shall redirect or guide the user to login first.
+Registered User
+FR18: A visitor shall be able to create an account by providing name, email address, password, and confirm password.
+FR19: The system shall validate email format, duplicate email, and password confirmation before creating a user account.
+FR20: Registered Users shall be able to login using registered email address and password.
+FR21: Registered Users shall be able to logout after successful login.
+FR22: Registered Users shall be able to change password by providing current password, new password, and confirm new password.
+FR23: Registered Users shall be able to perform all actions available to Guest Users.
+FR24: Registered Users shall be able to RSVP/register for an approved event from the event detail page.
+FR25: The system shall prevent duplicate RSVP records for the same user and same event.
+FR26: Registered Users shall be able to cancel their RSVP before the event date if cancellation is allowed by the system.
+FR27: Registered Users shall be able to save/bookmark approved events for later viewing.
+FR28: The system shall prevent duplicate saved-event records for the same user and same event.
+FR29: Registered Users shall be able to remove an event from their saved/bookmarked events list.
+FR30: Registered Users shall be able to view their RSVP history and saved events from user dashboard/profile area.
+FR31: Registered Users shall be able to submit a new event for administrator review.
+FR32: The event submission form shall require event title, category, full description, event date, event start time, event mode, organizer contact, and venue/online event details.
+FR33: For physical events, the user shall provide venue name, city, address, and location coordinates where required.
+FR34: For online events, the user shall provide online event platform or joining link where required.
+FR35: The system shall validate that the submitted event date is not in the past.
+FR36: Registered Users shall be able to upload event image in JPG, JPEG, PNG, or WEBP format.
+FR37: Submitted events shall be saved with Pending status and shall remain hidden from public users until approved by Administrator.
+FR38: Registered Users shall be able to view the status of their submitted events as Pending, Approved, or Rejected.
+FR39: Registered Users shall be able to edit their submitted event while it is still in Pending status.
+Administrator
+FR40: Administrator shall be able to login to the administrator panel using administrator username/email and password.
+FR41: The system shall restrict administrator panel access to Administrator role only.
+FR42: Administrator shall be able to view dashboard information including total events, pending events, approved events, rejected events, registered users, and RSVP records.
+FR43: Administrator shall be able to create a new event directly from the administrator panel.
+FR44: Administrator shall be able to edit event title, category, description, date, time, mode, venue address, coordinates, ticket information, organizer contact, and event image.
+FR45: Administrator shall be able to delete an event from the system after confirmation.
+FR46: Administrator shall be able to change event status to Approved/Published, Pending, Rejected, or Draft where applicable.
+FR47: Administrator shall be able to view all events including Pending, Approved, Rejected, and Draft events.
+FR48: Administrator shall be able to search and filter events inside the administrator panel by title, category, status, city, or date.
+FR49: Administrator shall be able to create, update, and delete event categories.
+FR50: The system shall prevent deletion of an event category if any event is using that category.
+FR51: Administrator shall be able to mark an approved event as Featured or remove Featured status from an event.
+FR52: Administrator shall be able to view all events submitted by Registered Users for approval.
+FR53: Administrator shall be able to approve a submitted event if its information is complete and suitable for publishing.
+FR54: Approved user-submitted events shall become visible to Guest Users and Registered Users.
+FR55: Administrator shall be able to reject a submitted event if information is incomplete, invalid, duplicate, or unsuitable.
+FR56: Rejected events shall remain hidden from public event browsing.
+FR57: Administrator shall be able to write or select a rejection reason for record keeping where applicable.
+FR58: Administrator shall be able to view registered users and activate or deactivate user accounts where required.
+FR59: Administrator shall be able to view RSVP records for each event and the list of users who RSVP for a selected event.
+System
+FR60: The system shall store event information, categories, user accounts, RSVP records, saved events, and approval status in the database.
+FR61: The system shall maintain relationship between users and their RSVP records, saved events, and submitted events.
+FR62: The system shall display validation messages near the field where invalid data is entered.
+FR63: The system shall display success messages after successful registration, login, RSVP, save, event submission, approval, rejection, creation, update, or deletion.
+FR64: The system shall display error messages if an operation fails due to invalid input, unauthorized access, or server problem.
+Non-Functional Requirements
+1. Data Integrity/Validity:
+NFR01: The system shall validate all required fields before saving registration, event submission, RSVP, saved event, and admin changes.
+NFR02: The system shall prevent duplicate RSVP/saved-event records and shall not display Pending or Rejected events publicly.
+2. Usability:
+NFR03: The interface shall be user-friendly and shall guide users through clear labels, buttons, instructions, and messages.
+3. Performance:
+NFR04: The system should load event pages, search/filter results, images, and map markers within 2 seconds time under normal project-level data.
+4. Security:
+NFR05: The system shall use authentication, authorization, password protection, and input validation to prevent unauthorized access and invalid data submission.
+5. Reliability:
+NFR06: The system shall save and retrieve event data, user accounts, RSVP records, saved events, and approval decisions consistently without crashing.
+6. Maintainability:
+NFR07: The system shall be developed in a modular and scalable way so future changes such as new categories, reviews, or notifications can be added easily.
+7. Compatibility:
+NFR08: The system shall be compatible with common modern browsers and usable on desktop, tablet, and mobile devices.
+
+
+Use Case Diagram(s):
+
+
+Usage Scenarios:
+Usage Scenario # 1:
+Use Case Title
+Register Account
+Use Case ID
+UC-01
+Actors
+Registered User
+Description
+A visitor can register as a user by submitting the registration form with required details.
+Pre-Condition
+None
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Visitor clicks on SignUp/Register button.
+2. Visitor enters name, email, password and confirm password.
+3. Visitor clicks on submit/register button.
+4. System validates information and creates account.
+During form filling, user may click Clear/Reset button: all entered values are removed from the form.
+1. Email format is invalid: system displays invalid email message.
+2. Email already exists: system displays account already exists message.
+3. Password and confirm password do not match: system displays password mismatch message.
+4. Required field is blank: system asks user to enter required data.
+Post-Condition
+User account is created if all entered information is valid.
+Author
+BC250212514
+
+Usage Scenario # 2:
+Use Case Title
+Login as Registered User
+Use Case ID
+UC-02
+Actors
+Registered User
+Description
+A registered user can login to the system using registered email address and password.
+Pre-Condition
+User account is already created.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User clicks on Login button.
+2. User enters email address and password.
+3. User clicks on submit/login button.
+4. System verifies credentials.
+None.
+1. Email or password is incorrect: system displays invalid login message.
+2. User account is deactivated: system displays account disabled message.
+Post-Condition
+Registered User gets logged in if credentials are correct.
+Author
+BC250212514
+
+
+Usage Scenario # 3:
+Use Case Title
+Browse Events
+Use Case ID
+UC-03
+Actors
+Guest User, Registered User
+Description
+A visitor or registered user can browse approved events in list view and map view.
+Pre-Condition
+Application is accessible and approved events may exist.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User opens homepage or events page.
+2. System loads approved events.
+3. System displays events in list view.
+4. System displays map markers for physical events where location is available.
+If no approved event exists, system displays No events found message.
+1. Event data cannot be loaded: system displays loading error.
+2. Map service fails: system still displays list view if event data is available.
+Post-Condition
+Approved events are displayed to the user.
+Author
+BC250212514
+
+Usage Scenario # 4:
+Use Case Title
+Search and Filter Events
+Use Case ID
+UC-04
+Actors
+Guest User, Registered User
+Description
+A user can search and filter events to find relevant events quickly.
+Pre-Condition
+Event browsing page is opened.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User enters keyword in search field or selects filter values.
+2. User clicks Search/Apply Filter or system applies filter automatically.
+3. System retrieves matching approved events.
+4. System updates list view and map markers.
+1. User clicks Reset/Clear Filters: system displays all approved events again.
+2. User changes filter criteria: system updates results again.
+1. No matching event found: system displays No events found message.
+2. Server error occurs: system displays error while loading results.
+Post-Condition
+Only matching events are displayed to user.
+Author
+BC250212514
+
+Usage Scenario # 5:
+Use Case Title
+View Event Details
+Use Case ID
+UC-05
+Actors
+Guest User, Registered User
+Description
+A user can view complete information about a selected event.
+Pre-Condition
+Selected event exists and is approved.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User opens event list, map popup, or featured event card.
+2. User clicks View Details.
+3. System opens event detail page.
+4. System displays event title, description, category, date/time, venue/online information, organizer contact, ticket information, image and mini map where available.
+If optional image or organizer contact is missing, system displays available event information only.
+1. Event is deleted or unpublished: system displays event not available message.
+2. Detail page cannot load: system displays error message.
+Post-Condition
+Complete available details of selected event are displayed.
+Author
+BC250212514
+
+Usage Scenario # 6:
+Use Case Title
+RSVP Event
+Use Case ID
+UC-06
+Actors
+Registered User
+Description
+A registered user can RSVP/register interest for an approved event.
+Pre-Condition
+User is logged in and event exists.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Registered User opens event detail page.
+2. User clicks RSVP/Register button.
+3. System checks whether user has already RSVP for that event.
+4. System saves RSVP record.
+5. System displays confirmation message.
+If Guest User clicks RSVP, system redirects or asks user to login first.
+1. User already RSVP for the same event: system displays already registered message.
+2. Event is unavailable or past event: system does not create RSVP and displays message.
+3. Database error occurs: system displays operation failed message.
+Post-Condition
+RSVP record is saved against the user account.
+Author
+BC250212514
+
+Usage Scenario # 7:
+Use Case Title
+Save Event
+Use Case ID
+UC-07
+Actors
+Registered User
+Description
+A registered user can save/bookmark an approved event for later viewing.
+Pre-Condition
+User is logged in and selected event exists.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Registered User opens event card or event detail page.
+2. User clicks Save/Bookmark button.
+3. System checks duplicate saved event record.
+4. System saves event against user account.
+5. System displays confirmation.
+If Guest User clicks Save, system asks user to login first.
+1. Event already saved: system displays already saved message.
+2. Event is unavailable: system displays event not available message.
+3. Database error occurs: system displays operation failed message.
+Post-Condition
+Event is added to user saved events list.
+Author
+BC250212514
+
+Usage Scenario # 8:
+Use Case Title
+Submit Event
+Use Case ID
+UC-08
+Actors
+Registered User
+Description
+A registered user can submit a new event for administrator review and approval.
+Pre-Condition
+User is logged in.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User clicks Submit Event.
+2. System displays event submission form.
+3. User enters event title, category, description, date/time, mode, venue/online details and organizer contact.
+4. User uploads event image if required.
+5. User clicks submit.
+6. System validates and stores event with Pending status.
+User may cancel the form before submission; no event record is created.
+1. Required field is blank: system asks user to enter required data.
+2. Event date is in the past: system displays invalid date message.
+3. Uploaded file type is invalid: system displays file type error.
+4. Server error occurs: system displays submission failed message.
+Post-Condition
+Submitted event is saved with Pending status and waits for admin review.
+Author
+BC250212514
+
+Usage Scenario # 9:
+Use Case Title
+Change Password
+Use Case ID
+UC-09
+Actors
+Registered User
+Description
+A registered user can change account password after login.
+Pre-Condition
+User is logged in.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. User opens account settings.
+2. User clicks Change Password.
+3. User enters current password, new password and confirm new password.
+4. User submits the form.
+5. System validates and updates password.
+None.
+1. Current password is incorrect: system displays current password incorrect.
+2. New password and confirm password do not match: system displays password mismatch.
+3. New password does not follow rules: system displays password rules.
+Post-Condition
+User password is changed successfully.
+Author
+BC250212514
+
+Usage Scenario # 10:
+Use Case Title
+Login as Administrator
+Use Case ID
+UC-10
+Actors
+Administrator
+Description
+Administrator must login before accessing administrative functions of the platform.
+Pre-Condition
+Administrator account exists.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens admin login page.
+2. Administrator enters username/email and password.
+3. Administrator clicks login.
+4. System validates administrator credentials and role.
+None.
+1. Username/email or password is incorrect: system displays invalid credentials.
+2. User is not administrator: system denies admin access.
+Post-Condition
+Administrator gets logged in to admin panel if credentials and role are valid.
+Author
+BC250212514
+
+Usage Scenario # 11:
+Use Case Title
+Manage Events
+Use Case ID
+UC-11
+Actors
+Administrator
+Description
+Administrator can create, update, delete, and manage event records.
+Pre-Condition
+Administrator is logged in.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens event management page.
+2. Administrator views list of events.
+3. Administrator selects create, edit, delete, or status update action.
+4. Administrator enters or modifies event data.
+5. System validates and saves changes.
+Administrator may cancel the action before saving changes.
+1. Required event field is missing: system displays validation message.
+2. Unauthorized user tries to access page: system denies access.
+3. Database error occurs: system displays operation failed.
+Post-Condition
+Event record is created, updated, deleted, or status is changed.
+Author
+BC250212514
+
+Usage Scenario # 12:
+Use Case Title
+Manage Categories
+Use Case ID
+UC-12
+Actors
+Administrator
+Description
+Administrator can create, update, or delete event categories.
+Pre-Condition
+Administrator is logged in.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens category management page.
+2. Administrator creates a new category or selects existing category.
+3. Administrator edits category name/description or deletes category.
+4. System saves changes.
+Administrator may cancel the operation.
+1. Category name is blank: system displays validation error.
+2. Category already exists: system displays duplicate category message.
+3. Category is linked with events: system prevents deletion.
+Post-Condition
+Category record is created, updated, or deleted if valid.
+Author
+BC250212514
+
+Usage Scenario # 13:
+Use Case Title
+Review Submitted Events
+Use Case ID
+UC-13
+Actors
+Administrator
+Description
+Administrator can review events submitted by registered users before approving or rejecting them.
+Pre-Condition
+Administrator is logged in and at least one submitted event may exist.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens pending events page.
+2. System displays user-submitted events with Pending status.
+3. Administrator opens a submitted event.
+4. Administrator reviews title, description, date, category, location/mode, image, and organizer contact.
+If no pending event exists, system displays no pending events message.
+1. Event record cannot be opened: system displays loading error.
+2. Unauthorized access attempt: system denies access.
+Post-Condition
+Administrator can inspect submitted event details before decision.
+Author
+BC250212514
+
+Usage Scenario # 14:
+Use Case Title
+Approve/Reject Event
+Use Case ID
+UC-14
+Actors
+Administrator
+Description
+Administrator can approve or reject each event submitted by registered users.
+Pre-Condition
+Administrator is logged in and selected submitted event is pending.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator reviews pending event.
+2. Administrator clicks Approve or Reject.
+3. System updates event status.
+4. If approved, event becomes visible publicly.
+5. If rejected, event remains unpublished.
+Administrator may add/select rejection reason when rejecting event.
+1. Event is already processed: system displays status already updated message.
+2. Database error occurs: system displays status update failed.
+Post-Condition
+Submitted event status becomes Approved or Rejected.
+Author
+BC250212514
+
+Usage Scenario # 15:
+Use Case Title
+Manage Featured Events
+Use Case ID
+UC-15
+Actors
+Administrator
+Description
+Administrator can mark selected approved events as featured for homepage display.
+Pre-Condition
+Administrator is logged in and event exists.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens event management page.
+2. Administrator selects an approved event.
+3. Administrator marks event as Featured or removes Featured status.
+4. System saves featured status.
+Administrator may cancel without saving changes.
+1. Pending or Rejected event is selected for featured section: system prevents action.
+2. Database error occurs: system displays operation failed.
+Post-Condition
+Featured events section is updated according to administrator action.
+Author
+BC250212514
+
+Usage Scenario # 16:
+Use Case Title
+View RSVP Records
+Use Case ID
+UC-16
+Actors
+Administrator
+Description
+Administrator can view RSVP records for each event.
+Pre-Condition
+Administrator is logged in and RSVP records may exist.
+Normal Course of Events
+Alternative Paths
+Exceptions
+1. Administrator opens event details or RSVP management page.
+2. Administrator selects an event.
+3. System displays RSVP count and list of registered users where available.
+If no RSVP exists for the selected event, system displays no RSVP record message.
+1. Unauthorized user tries to view records: system denies access.
+2. Data cannot be loaded: system displays error message.
+Post-Condition
+Administrator can view RSVP information for selected event.
+Author
+BC250212514
+
+
+Adopted Methodology
+
+Available Methodologies:
+Some common software development methodologies (software models) are:
+    1. Waterfall Model
+    2. Prototyping Model
+    3. Spiral Model
+    4. RAD Model
+    5. VU Process Model (Combination of Waterfall and Spiral models)
+
+    1. Waterfall Model:
+It is a linear model. As name indicates, it is a sequential model like a waterfall, in which each new phase starts only when the previous one is completed. This model is best suited for a software whose requirements are well understood and stable. This model includes following phases.
+    (i) Requirements Analysis: Requirements are gathered and analysed for development of technical specifications. 
+    (ii) System Design: System is designed according to software requirement specifications developed in previous phase.
+    (iii) Development/Implementation: System design prepared in previous phase is implemented in this phase to develop the code of the product.
+    (iv) Integration and Unit/System/User Acceptance Testing: Integration of the system components and rigorous testing of the whole system to check whether it meets the requirements.
+    (v) Deployment: In this phase, the developed system is deployed on client side.
+    (vi) Maintenance: Any updates to adapt any changes or addition in the requirements of the system in future.
+
+
+Figure 1.1 (Waterfall Model)
+
+
+
+    2. Prototyping Model:
+If the requirements of the software are not well understood or prone to changes later, then an early version (prototype) of the software is developed in a short span of time. That prototype is then refined multiple times until a required standard is achieved. This process is called prototyping model. This includes following phases:
+    (i) Requirement Gathering: Basic requirements are gathered from the customer.
+    (ii) Quick Design: A quick design is created on the basis of initial requirements, focusing on major functionality.
+    (iii) Prototype Development: A prototype of the system is built using rapid development tools, presenting the core functionality.
+    (iv) Prototype Evaluation: Prototype is presented in front of stakeholders for feedback, and they suggest any improvements or changes.
+    (v) Refinement: Prototype is refined, and on the basis of feedback, features are modified, added or removed. 
+    (vi) Repeat: The cycle of prototype development, evaluation and refinement is repeated until a satisfactory prototype is achieved.
+    (vii) System Development: Finally, when the prototype is approved from the stakeholders and requirements are finalized, then actual development of the system starts in this phase.
+ 
+
+Figure 1.2 (Prototyping Model)
+
+    3. Spiral Model:
+This model combines the systematic nature of waterfall model and iterative development. This model is used for the development of large-scale, complex, unclear, uncertain and high risk softwares, such as, missile guidance system. Structured nature of waterfall model is used to manage risk and iterative development is used to adapt any changes throughout the lifecycle.
+Steps involved in spiral model are:
+    (i) Planning: Objective, requirements, constraints, project scope, deliverables, resource allocation, scheduling, alternative solutions and strategies are identified.
+    (ii) Risk Analysis: Potential risks are identified and their impact on project objectives is assessed. Based on that assessment, risk mitigation plan is developed to manage the risk throughout the lifecycle.
+    (iii) Engineering: Development activities are conducted for the requirements gathered in the planning phase. Prototype development may be used for the validation of requirements and design. Reviews are held to assess progress and tackle any deviation.
+    (iv) Evaluation: The current iteration is evaluated for completeness, as per features, quality and objectives. On the basis of feedback of stakeholders and lessons learnt from that iteration, any changes or improvements in project plan amd requirements are incorporated in the next iterations.
+
+
+Figure 1.3 (Spiral Model)
+
+	Key Features of Spiral Model:
+    (i) Iterative approach: Despite of developing the whole system at once, system is divided into iterations/spirals, all the steps repeated in each spiral.
+    (ii) Risk Management: Risk is analysed at the start of each iteration and risk mitigation plan is developed.
+    (iii) Progressive Elaboration: In each iteration, understanding about the requirements became more and more clear, resulting in reduced uncertainty.
+    (iv) Flexibility: Fexible due to its spiral nature, as changes can be accommodated at each iteration.
+
+    4. RAD Model:
+Rapid Application Development is a software model in which system is developed, rapidly, component wise (each component by a separate team in parallel) to speed up the process.
+It combines iterative development and prototyping. Prototypes are developed initially for requirement validation and then improved on the basis of stakeholders feedback. This model is adopted, if requirements are uncertain or time to deliver is short.
+Activities involved in RAD are:
+    (i) Business Modeling: Essential business processes, goals and requirements are documented rapidly through interviews, workshops and other techniques. Here, prototypes may also be used for requirement validation.
+    (ii) Data Modeling: Systems’s data architecture is designed to define the data requirements to fulfil business needs including databases, tables and relationships. Entity-Relationship Diagrams and other data models are designed for data validation and feedback.
+    (iii) Process Modeling: It involves documenting the flow of activities in the system, and their interactions. Process diagrams and flowcharts etc. are developed to visualize the flow of system. Prototyping is used for validation of process models according to business requirements.
+    (iv) Application Generation: In this phase, application is developed rapidly based on the requirements, designs and process models established in previous phases. Different teams work on each component in parallel to speed up the process.
+    (v) Testing: System components are tested throughout the lifecycle using proper test coverage. Testing is incorporated in each phase of the SDLC, in which developer and user both work together to test the developed component or system.
+    (vi) Turnover: Also known as deployment or implementation, system is continuously deployed into production for operational use throughout lifecycle for rapid delivery, and improving it later in next iterations.
+
+
+Figure 1.4 (RAD Model)
+
+
+
+
+    5. VU Process Model (My Adopted Methodology):
+I will adopt VU Process Model for the development of this project because it is a combination of Waterfall and Spiral models. So, it will include structured approach of waterfall model as well as iterative nature of spiral model.
+    • Using waterfall nature, I can build the system using a structured and well-defined approach. Due to linear nature of waterfall model, it will be easy to develop the product phase by phase.
+    • Using Spiral nature, I can perform risk analysis at the start of each phase, verification at the end of each phase, and iterative development, resulting in an efficient and reliable product.
+	Key features of VU Process Model are:
+    (i) Sequential Phases:
+Just like waterfall model, VU process model follows the linear approach in which each phase must be completed before the start of next phase. It makes the VU Process Model, a structured model, very useful for systematic development throughout the lifecycle.
+    (ii) Risk Management:
+Risk analysis at the start of each phase is very beneficial for risk management and mitigation. Risk is analyzed before starting of each phase, and then a mitigation plan is developed to create a reliable product. 
+    (iii) Verification and Validation:
+Verification is performed at the end of each phase, so that the work done at each phase can be verified and validated before moving to the next phase. So, defects are prevented to pass on to the next phases. As a result, cost to remove errors at later stages will also be minimized.
+    (iv) Iterative Development:
+Being combination of both waterfall and spiral models, VU process model is an iterative model, just like spiral model. It incorporates iterative software development practices to improve/update/change the product continuously throughout the lifecycle. Feedback is gathered at each phase and corresponding changes are made reducing the product failure chances at later stages.
+    (v) Documentation:
+Similar to waterfall and spiral model, VU process model emphasizes comprehensive documentation of each phase of the lifecycle. This documentation will serve as a reference for all the stakeholders and help to understand the progress of the project as valuable insights.
+    (vi) Flexibility:
+Being a combination of both waterfall and spiral model, it provides a lot of flexibility to adapt to any changes/updates, if any change occurs in the requirements, scope or objective of the product.
+
+
+
+    (vii) Traceability:
+VU process model emphasizes traceability in all phases of the software development lifecycle to ensure that requirements are reflected in design, implementation, testing and maintenance etc. It results in consistency throughout the project to make any changes, when required.
+
+
+
+
+Figure 1.5 (VU Process Model)
+
+
+
+
+
+
+Work Plan
+
+
+
+
+/home/muhammadhs/Desktop/FYP/final-year-project/APPROVED_DESIGN_DOCUMENT.docx
+
+Event Discovery & Community Engagement Platform
+Design Document
+Version 1.0
+
+Group Id: S26PROJECTC0D01
+Supervisor Name: Amjad Iqbal Khan
+
+
+Revision History
+Date (dd/mm/yyyy)
+Version
+Description
+Author
+24-07-2026
+1.0
+This Design Document presents the technical design and solution of the Event Discovery & Community Engagement Platform. It describes the overall system architecture, database design, Entity Relationship Diagram (ERD), class diagram, sequence diagrams, interface design, and test cases needed for implementation. The platform allows users to discover and participate in local and online events through interactive map and list views, search and filter events, RSVP for events, save favorite events, and submit new events for administrator review. The Administrator manages event records, categories, featured events, user-submitted events, registered users, and RSVP records through a secure administration panel.
+BC250212514
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table of Contents
+
+
+										
+    1. Introduction of Design Document			
+    2. Entity Relationship Diagram (ERD)
+    3. Sequence Diagrams	
+    4. Architecture Design Diagram	
+    5. Class Diagram					
+    6. Database Design
+    7. Interface Design
+    8. Test Cases				
+
+
+
+
+
+
+
+    1. Introduction of Design Document
+Design Document is a technical solution of the SRS. It serves as the blueprint of the system, which describes the design and architecture of the whole system. It includes:
+    i) “Entity Relationship Diagram” which describes the conceptual design of the database, i.e. entities of the system, their attributes and relationships among them.
+    ii) “Database Design”, which describes the logical design of the database, which is then implemented in any DBMS.
+    iii)  “Sequence Diagrams”, describing the sequence of events that occur among different objects and services of the system, to perform a specific functionality.
+    iv)  “Architecture Diagram”, which describes the tiered architecture of the system.
+    v)  “Class Diagram”, which depicts the object-oriented design of the system. It describes the attributes and methods associated with each class, and also inheritance (conceptual link among classes) and association (physical link among objects) relationships.
+    vi)   “Interface Design”, which describes the user interface / front-end view of the system to which user will interact. 
+    vii)  “Test Cases” for each use-case / usage scenario.
+	Design Document is a very critical phase of the SDLC. It outlines what needs to be built, and provide a clear understanding of the system to all stakeholders like testers, client and developers etc. Many potential risks are identified and mitigated in the design phase, before moving ahead. It serves as the blueprint for the developers and provide consistency and standardization during development. It helps testers to test a particular functionality efficiently and make effective test plans as it provides the complete design of the system. It is very beneficial for maintenance and scalability, because it provides the complete architecture and design of the system and helps that how a specific area can be maintained and scaled up. It helps in quality assurance as a review and feedback reference and avoid rework result in cost efficiency. Moreover, it helps project managers to allocate resources for each activity of the SDLC.
+    2. Entity Relationship Diagram (ERD)
+
+
+
+    3. Sequence Diagrams
+
+
+
+
+
+
+
+    4. Architecture Design Diagram
+
+
+    5. Class Diagram
+
+
+
+
+    6. Database Design
+
+
+    7. Interface Design
+
+Homepage view:
+
+
+
+
+
+
+Login View:
+
+
+User Profile Dashboard view:
+
+
+
+
+
+Event Detail Page View:
+
+
+
+
+Submit Event View:
+
+
+Admin Dashboard view:
+
+
+
+    8. Test Cases
+
+
+
+TC-01: User Registration
+Test Case ID
+TC-01
+Test Case Title
+User Registration
+UC Reference
+UC-01
+Pre-Conditions
+User is not registered. Registration page is accessible.
+Actions
+1. Open Sign Up / Register page.
+2. Enter valid name, email address, password and confirm password.
+3. Click the Submit / Register button.
+4. System validates the entered information.
+Expected Results
+User account is created successfully and system displays a confirmation message.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-02: User Login
+Test Case ID
+TC-02
+Test Case Title
+User Login
+UC Reference
+UC-02
+Pre-Conditions
+User account already exists. Login page is accessible.
+Actions
+1. Open Login page.
+2. Enter registered email address and correct password.
+3. Click the Login / Submit button.
+4. System verifies the credentials.
+Expected Results
+Registered User is logged in successfully and redirected to homepage or user dashboard.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-03: Browse Events in List View
+Test Case ID
+TC-03
+Test Case Title
+Browse Events in List View
+UC Reference
+UC-03
+Pre-Conditions
+Application is accessible. At least one approved event exists in the system.
+Actions
+1. Open homepage or Browse Events page.
+2. System loads and displays approved events.
+3. Observe events displayed in structured list view.
+4. Verify each event card shows title, category, date, location/mode and short description.
+Expected Results
+All approved events are displayed correctly in list view with complete event card information.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-04: Browse Events on Map View
+Test Case ID
+TC-04
+Test Case Title
+Browse Events on Map View
+UC Reference
+UC-03
+Pre-Conditions
+Application is accessible. At least one approved physical event with valid coordinates exists.
+Actions
+1. Open Browse Events page.
+2. Switch to Map View tab.
+3. Observe map markers loaded for physical events.
+4. Click on a map marker.
+5. Verify popup appears with event title, category, date and View Details option.
+Expected Results
+Map displays correct markers for physical events. Clicking a marker shows the correct event popup.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-05: Search Events
+Test Case ID
+TC-05
+Test Case Title
+Search Events
+UC Reference
+UC-04
+Pre-Conditions
+Browse Events page is open. At least one approved event exists.
+Actions
+1. Enter a keyword (event title, organizer name, venue, city or description keyword) in the search bar.
+2. Click Search button or press Enter.
+3. System retrieves and displays matching approved events.
+4. Verify list view and map markers update to show only matching results.
+Expected Results
+Only events matching the search keyword are displayed in list view and map view.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-06: Filter Events
+Test Case ID
+TC-06
+Test Case Title
+Filter Events
+UC Reference
+UC-04
+Pre-Conditions
+Browse Events page is open. Approved events of multiple categories and modes exist.
+Actions
+1. Select a category from the Category dropdown.
+2. Select an event mode from the Event Mode dropdown.
+3. Select a date range from the Date Range filter.
+4. System applies filters and updates results.
+5. Click Clear Filters button to reset.
+Expected Results
+Only events matching all selected filter criteria are displayed. Clearing filters restores full approved events list.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-07: View Event Details
+Test Case ID
+TC-07
+Test Case Title
+View Event Details
+UC Reference
+UC-05
+Pre-Conditions
+At least one approved event exists in the system.
+Actions
+1. Open event list, map popup, or featured event section.
+2. Click View Details on an approved event.
+3. System opens the event detail page.
+4. Verify page displays event title, full description, category, date, time, venue/online info, organizer contact, ticket information, image, and mini map where available.
+Expected Results
+Event detail page displays all available complete information for the selected event.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-08: RSVP for Event
+Test Case ID
+TC-08
+Test Case Title
+RSVP for Event
+UC Reference
+UC-06
+Pre-Conditions
+Registered User is logged in. An approved event exists that the user has not already RSVP'd for.
+Actions
+1. Open event detail page.
+2. Click RSVP / Register button.
+3. System checks for duplicate RSVP record.
+4. System saves RSVP record.
+5. Verify confirmation message is displayed.
+Expected Results
+RSVP record is saved against the user account and a confirmation message is displayed.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-09: Cancel RSVP
+Test Case ID
+TC-09
+Test Case Title
+Cancel RSVP
+UC Reference
+UC-06
+Pre-Conditions
+Registered User is logged in and has an existing RSVP for a future event.
+Actions
+1. Open User Profile Dashboard.
+2. Navigate to My RSVPs tab.
+3. Click Cancel RSVP on an existing RSVP entry.
+4. Confirm cancellation.
+5. Verify RSVP is removed from the list.
+Expected Results
+RSVP record is removed successfully and no longer appears in the user's RSVP history.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-10: Save / Bookmark Event
+Test Case ID
+TC-10
+Test Case Title
+Save / Bookmark Event
+UC Reference
+UC-07
+Pre-Conditions
+Registered User is logged in. An approved event exists that has not been saved by this user.
+Actions
+1. Open event card or event detail page.
+2. Click Save / Bookmark button.
+3. System checks for duplicate saved event record.
+4. System saves the event against the user account.
+5. Verify confirmation message is displayed.
+Expected Results
+Event is added to the user's saved events list and a confirmation message is displayed.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-11: Remove Saved Event
+Test Case ID
+TC-11
+Test Case Title
+Remove Saved Event
+UC Reference
+UC-07
+Pre-Conditions
+Registered User is logged in and has at least one saved event.
+Actions
+1. Open User Profile Dashboard.
+2. Navigate to Saved Events tab.
+3. Click Remove / Bookmark icon on a saved event.
+4. Verify event is removed from saved events list.
+Expected Results
+Event is removed from the user's saved events list successfully.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-12: Submit New Event
+Test Case ID
+TC-12
+Test Case Title
+Submit New Event
+UC Reference
+UC-08
+Pre-Conditions
+Registered User is logged in.
+Actions
+1. Click Submit Event option.
+2. System displays event submission form.
+3. Enter event title, category, full description, event date, start time, event mode, and organizer contact.
+4. For physical event: enter venue name, city, address and coordinates.
+5. Upload event image in JPG, JPEG, PNG or WEBP format.
+6. Click Submit button.
+7. System validates and stores the event with Pending status.
+Expected Results
+Submitted event is saved with Pending status and is not visible to public until approved by Administrator.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-13: Change Password
+Test Case ID
+TC-13
+Test Case Title
+Change Password
+UC Reference
+UC-09
+Pre-Conditions
+Registered User is logged in.
+Actions
+1. Open account settings or profile page.
+2. Click Change Password.
+3. Enter current password, new password and confirm new password.
+4. Click Submit.
+5. System validates and updates the password.
+Expected Results
+Password is changed successfully and system displays a success confirmation message.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-14: Administrator Login
+Test Case ID
+TC-14
+Test Case Title
+Administrator Login
+UC Reference
+UC-10
+Pre-Conditions
+Administrator account exists in the system.
+Actions
+1. Open the Administrator login page.
+2. Enter administrator username/email and password.
+3. Click Login button.
+4. System validates administrator credentials and role.
+Expected Results
+Administrator is logged in successfully and redirected to the Administrator Dashboard.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-15: Manage Events (Admin)
+Test Case ID
+TC-15
+Test Case Title
+Manage Events (Admin)
+UC Reference
+UC-11
+Pre-Conditions
+Administrator is logged in.
+Actions
+1. Open Event Management page from the admin sidebar.
+2. View the list of all events including Pending, Approved, Rejected and Draft.
+3. Click Create New Event and enter all required event fields.
+4. Save the new event.
+5. Select an existing event and click Edit, modify fields and save.
+6. Select an event and click Delete, confirm deletion.
+7. Change the status of an event (Approved / Pending / Rejected / Draft).
+Expected Results
+Event is created, updated, deleted, or status is changed correctly. Changes reflect immediately in the event list.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-16: Manage Categories (Admin)
+Test Case ID
+TC-16
+Test Case Title
+Manage Categories (Admin)
+UC Reference
+UC-12
+Pre-Conditions
+Administrator is logged in.
+Actions
+1. Open Category Management page from admin sidebar.
+2. Click Create New Category and enter category name.
+3. Save the category and verify it appears in the list.
+4. Select an existing category, edit its name and save.
+5. Attempt to delete a category that is linked to existing events.
+6. Delete a category that has no linked events.
+Expected Results
+Categories are created and updated successfully. Deletion of a category linked to events is prevented with a message. Unlinked category is deleted successfully.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-17: Review Submitted Events (Admin)
+Test Case ID
+TC-17
+Test Case Title
+Review Submitted Events (Admin)
+UC Reference
+UC-13
+Pre-Conditions
+Administrator is logged in. At least one user-submitted event with Pending status exists.
+Actions
+1. Open Pending Approvals page from admin sidebar.
+2. System displays all user-submitted events with Pending status.
+3. Click on a pending event to open its full details.
+4. Review event title, description, date, category, location/mode, image and organizer contact.
+Expected Results
+Administrator can view complete details of pending submitted events before making an approval decision.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-18: Approve Submitted Event (Admin)
+Test Case ID
+TC-18
+Test Case Title
+Approve Submitted Event (Admin)
+UC Reference
+UC-14
+Pre-Conditions
+Administrator is logged in. A user-submitted event with Pending status exists.
+Actions
+1. Open Pending Approvals page.
+2. Select a pending event and review its details.
+3. Click the Approve button.
+4. System updates event status to Approved.
+5. Verify the event is now visible in the public events list.
+Expected Results
+Event status is changed to Approved and the event becomes publicly visible to Guest Users and Registered Users.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-19: Reject Submitted Event (Admin)
+Test Case ID
+TC-19
+Test Case Title
+Reject Submitted Event (Admin)
+UC Reference
+UC-14
+Pre-Conditions
+Administrator is logged in. A user-submitted event with Pending status exists.
+Actions
+1. Open Pending Approvals page.
+2. Select a pending event and review its details.
+3. Click the Reject button.
+4. Enter or select a rejection reason.
+5. System updates event status to Rejected.
+6. Verify rejected event is not visible in public event browsing.
+Expected Results
+Event status is changed to Rejected. Rejection reason is recorded. Event remains hidden from public browsing.
+Results
+Pass / Fail
+Author
+BC250212514
+
+TC-20: Manage Featured Events (Admin)
+Test Case ID
+TC-20
+Test Case Title
+Manage Featured Events (Admin)
+UC Reference
+UC-15
+Pre-Conditions
+Administrator is logged in. At least one approved event exists.
+Actions
+1. Open Event Management page.
+2. Select an approved event.
+3. Click Mark as Featured.
+4. System saves the featured status.
+5. Verify event appears in the Featured Events section on homepage.
+6. Select the same event and click Remove Featured status.
+7. Verify event is removed from the Featured Events section.
+Expected Results
+Featured status is toggled correctly. Featured events appear on homepage featured section and non-featured events do not.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+TC-21: View RSVP Records (Admin)
+Test Case ID
+TC-21
+Test Case Title
+View RSVP Records (Admin)
+UC Reference
+UC-16
+Pre-Conditions
+Administrator is logged in. At least one event with RSVP records exists.
+Actions
+1. Open RSVP Records page from admin sidebar or open event details.
+2. Select an event from the list.
+3. System displays RSVP count and list of registered users for the selected event.
+4. Verify user names and RSVP details are shown correctly.
+Expected Results
+Administrator can view the complete RSVP record including count and list of registered users for the selected event.
+Results
+Pass / Fail
+Author
+BC250212514
+
+
+
+/home/muhammadhs/Desktop/FYP/final-year-project/PROTOTYPE_ASSIGNMENT_FILE.docx
+
+CS619 Prototype Assignment 
+Project: Event Discovery & Community Engagement Platform
+Objective
+Develop only the frontend prototype using HTML/CSS with either Bootstrap or Tailwind CSS. Include a basic login/logout flow (no backend required). The final project specification includes advanced features, but this assignment focuses only on the UI prototype with login/logout/registration. It is based on the uploaded project proposal. 
+Required Pages
+    • Landing/Home page
+    • Login page
+    • Register page
+    • Events listing page
+    • Event details page
+    • Categories page
+    • User dashboard (prototype)
+Minimum Features
+    • Responsive design
+    • Navigation bar and footer
+    • Login and Logout using localStorage or dummy authentication
+    • At least 6 event categories (Music, Sports, Technology, Art & Culture, Food & Drink, Community)
+    • Event cards with image, title, date, venue and category
+    • Category filtering (frontend only)
+    • Search box (frontend filtering)
+    • Featured events section
+    • Profile dropdown after login
+Submission
+Submit a ZIP containing source code and a README. No backend or database is required.
+
+NOTE: Login/Logout/Registser functionality must be there along with strapi V5 backend with NextjsAuth and JWT token(in case of students working with strapi and nextjs or with nodejs) , STUDENTS WORKING IN PHP MUST USE MYSQL /POSTGRES FOR LOGIN /LOGOUT/REGISTRATION.
+
+
+Assignment Title    Start Date          End Date            Status
+--------------------------------------------------------------------------------
+SRS                 Mon 11 May, 2026    Mon 25 May, 2026    Marked As Complete
+Design Document     Tue 26 May, 2026    Fri 24 Jul, 2026    Marked As Complete
+Prototype           Sat 25 Jul, 2026    Wed 26 Aug, 2026    Pending
+Final Deliverable   Thu 27 Aug, 2026    Tue 27 Oct, 2026    Pending
