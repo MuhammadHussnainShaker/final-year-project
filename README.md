@@ -1,32 +1,39 @@
 # Event Discovery & Community Engagement Platform
 
-A prototype for the CS619 Final Year Project — built with **Next.js 16 + Strapi v5 + shadcn/ui**.
+A prototype for the CS619 Final Year Project — built with **Next.js 16 + Strapi v5 + shadcn/ui + NextAuth.js**.
 
-## Quick Start (One Command)
+## Quick Start
 
-```bash
-bash setup.sh
-```
-
-Then open two terminals:
-
-```bash
-# Terminal 1 — Backend (API)
-cd backend && npm run start
-
-# Terminal 2 — Frontend (Website)
-cd frontend && npm run dev
-```
-
-Open **http://localhost:3000** in your browser.
-
----
-
-## Prerequisites
+### Prerequisites
 
 - **Node.js 20+** (install from https://nodejs.org/)
 - **npm** (comes with Node.js)
-- ~2GB free disk space
+
+### Setup
+
+```bash
+# 1. Install backend dependencies
+cd backend && npm install
+
+# 2. Install frontend dependencies
+cd ../frontend && npm install
+```
+
+### Running
+
+Open two terminals:
+
+```bash
+# Terminal 1 — Backend (Strapi API + Admin)
+cd backend && NODE_OPTIONS="--max-old-space-size=4096" npx strapi develop
+
+# Terminal 2 — Frontend (Next.js)
+cd frontend && npm run dev
+```
+
+Open **http://localhost:3000** in your browser. The backend runs at **http://localhost:1337**.
+
+> **Note:** The backend must be running for login/register/logout to work. The database seeds automatically on first start.
 
 ---
 
@@ -34,30 +41,36 @@ Open **http://localhost:3000** in your browser.
 
 ```
 final-year-project/
-├── backend/          # Strapi v5 CMS (API + Admin)
-│   ├── config/       # Server, database, middleware config
+├── backend/                    # Strapi v5 CMS (API + Admin)
+│   ├── config/                 # Server, database, middleware config
 │   ├── src/
 │   │   ├── api/
-│   │   │   ├── event/      # Event content type (CRUD)
-│   │   │   └── category/   # Category content type (CRUD)
-│   │   └── index.ts        # Seed data (6 categories, 15 events)
-│   └── .tmp/data.db        # SQLite database (auto-created)
-├── frontend/         # Next.js 16 (React frontend)
-│   ├── src/
-│   │   ├── app/            # Pages (App Router)
-│   │   │   ├── page.tsx              # Home page
-│   │   │   ├── login/page.tsx        # Login
-│   │   │   ├── register/page.tsx     # Registration
-│   │   │   ├── events/page.tsx       # Events listing + search
-│   │   │   ├── events/[id]/page.tsx  # Event detail
-│   │   │   ├── categories/page.tsx   # Categories page
-│   │   │   └── dashboard/page.tsx    # User dashboard
-│   │   ├── components/     # Reusable UI components
-│   │   ├── lib/            # API helpers, auth config
-│   │   └── types/          # TypeScript types
-│   └── .env.local          # Environment variables
-├── setup.sh          # One-command setup script
-└── README.md         # This file
+│   │   │   ├── event/          # Event content type (CRUD)
+│   │   │   └── category/       # Category content type (CRUD)
+│   │   └── index.ts            # Seed data (6 categories, 15 events) + permissions
+│   └── .tmp/data.db            # SQLite database (auto-created)
+├── frontend/                   # Next.js 16 (React frontend)
+│   ├── app/                    # Pages (App Router)
+│   │   ├── page.tsx            # Home page (featured carousel + search + event list)
+│   │   ├── login/page.tsx      # Login page
+│   │   ├── register/page.tsx   # Registration page
+│   │   ├── events/page.tsx     # Events listing + search + filters
+│   │   ├── events/[id]/page.tsx # Event detail page
+│   │   ├── categories/page.tsx  # Categories page
+│   │   ├── dashboard/page.tsx   # User dashboard (protected)
+│   │   └── api/auth/[...nextauth]/route.ts  # NextAuth API route
+│   ├── components/
+│   │   ├── layout/             # Navbar, Footer
+│   │   ├── events/             # EventCard component
+│   │   ├── auth/               # SessionProvider wrapper
+│   │   └── ui/                 # shadcn/ui components
+│   ├── lib/
+│   │   ├── auth.ts             # NextAuth config (Strapi Credentials provider)
+│   │   ├── strapi.ts           # Strapi API helper
+│   │   └── utils.ts            # cn() utility for Tailwind classes
+│   ├── types/index.ts          # TypeScript types
+│   └── .env.local              # Environment variables (NEXTAUTH_SECRET, etc.)
+└── README.md                   # This file
 ```
 
 ---
@@ -66,13 +79,13 @@ final-year-project/
 
 | Page | URL | Description |
 |------|-----|-------------|
-| Home | `/` | Hero banner, featured events, categories, how-it-works |
-| Login | `/login` | Email + password authentication |
-| Register | `/register` | New user registration |
+| Home | `/` | Featured events carousel, search bar, category/event mode filters, list/map toggle, event list |
+| Login | `/login` | Email + password login via NextAuth + Strapi JWT |
+| Register | `/register` | New user registration with validation |
 | Events | `/events` | Browse all events, search, filter by category |
-| Event Detail | `/events/[id]` | Full event info, date, venue, tickets |
-| Categories | `/categories` | Browse event categories |
-| Dashboard | `/dashboard` | User profile, RSVPs, saved events (requires login) |
+| Event Detail | `/events/[id]` | Full event info with breadcrumbs, date, venue, "Get Directions" |
+| Categories | `/categories` | Browse 6 event categories with event counts |
+| Dashboard | `/dashboard` | User profile, RSVPs, saved events, settings (requires login) |
 
 ---
 
@@ -80,12 +93,28 @@ final-year-project/
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS |
-| UI Components | shadcn/ui |
+| Frontend | Next.js 16, React 19, TypeScript |
+| Styling | Tailwind CSS 4, shadcn/ui |
 | Backend | Strapi v5 (Headless CMS) |
-| Database | SQLite (for prototype) |
-| Authentication | NextAuth.js with Strapi JWT |
+| Database | SQLite (prototype) |
+| Authentication | NextAuth.js v5 + Strapi JWT |
 | API | REST (auto-generated by Strapi) |
+
+---
+
+## Features
+
+- **Responsive design** — works on desktop, tablet, and mobile
+- **Navbar** — logo, nav links, Login/Sign Up buttons (logged out) or profile dropdown (logged in)
+- **Footer** — 3-column layout with links and social icons
+- **Featured events carousel** — horizontal scroll with arrow navigation
+- **Search & filter** — search by title/venue/city, filter by category and event mode
+- **List/Map toggle** — switch between list view and map placeholder
+- **Event cards** — image, title, category badge, date, venue, "View Details" button
+- **Event detail** — breadcrumbs, full info, "Get Directions" (Google Maps)
+- **Categories page** — 6 category cards with event counts
+- **Auth flow** — Register → Login (NextAuth JWT) → Dashboard → Logout
+- **Protected routes** — Dashboard redirects to login if unauthenticated
 
 ---
 
@@ -109,37 +138,37 @@ final-year-project/
 
 ---
 
+## How to Demo
+
+1. Open http://localhost:3000 — show the **Home page** with featured events carousel, search bar, and event list
+2. Use the **search bar** and **category filter** to demonstrate frontend filtering
+3. Click an **event card** "View Details" — show the detail page with breadcrumbs and venue info
+4. Click **Categories** in the navbar — show the categories page with event counts
+5. Click **Sign Up** — create a new account (auto-logs in after registration)
+6. Show the **Navbar** now shows profile dropdown with user initial
+7. Click **Dashboard** — show the protected user profile page
+8. Click **Logout** — show redirect to home with Login/Sign Up buttons restored
+
+---
+
 ## Troubleshooting
 
-### "strapi: not found"
-Run `npm install` in the `backend/` folder.
+### Strapi won't start / "Bus error"
+Your system may have limited RAM. Use the increased memory flag:
+```bash
+cd backend && NODE_OPTIONS="--max-old-space-size=4096" npx strapi develop
+```
 
-### Events return empty `[]`
+### Events return empty or categories show "Uncategorized"
 The database needs fresh seed data. Delete and restart:
 ```bash
 cd backend
 rm -f .tmp/data.db
-npm run start
+# Then restart Strapi — it will re-seed automatically
 ```
 
-### "Bus error (core dumped)" during build
-Your system has limited RAM. Use the webpack bundler:
-```bash
-cd backend
-NODE_OPTIONS="--max-old-space-size=4096" npm run develop -- --bundler webpack
-```
+### Frontend shows "No events available"
+Make sure the backend is running at http://localhost:1337 before opening the frontend.
 
-### Admin panel shows errors
-The admin panel has known webpack issues on low-RAM systems. This does **not** affect the API or frontend — both work perfectly without it.
-
----
-
-## How to Demo
-
-1. Open http://localhost:3000 — show the **Home page** with hero, featured events, categories
-2. Click **Events** — show the full listing with search and category filters
-3. Click an **event card** — show the detail page
-4. Click **Register** — create a new account
-5. Click **Login** — log in with the new account
-6. Click **Dashboard** — show the user profile page (protected route)
-7. Click **Logout** — show redirect to home
+### Login/Register not working
+Ensure both Strapi (port 1337) and Next.js (port 3000) are running.
