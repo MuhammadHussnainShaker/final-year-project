@@ -17,6 +17,15 @@ build/
 # Strapi
 backend/.env
 backend/database/
+backend/.tmp/
+backend/.strapi/
+backend/dist/
+
+# Frontend
+frontend/.next/
+
+# Lock files from LibreOffice
+.~lock.*
 
 # IDE
 .vscode/
