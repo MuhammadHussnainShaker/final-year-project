@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-3">EventHub</h3>
+            <h3 className="text-white text-lg font-bold mb-3">Event Discovery</h3>
             <p className="text-sm leading-relaxed">
               Discover and join amazing events in your city. From workshops and
               concerts to community drives — find what excites you.
@@ -68,7 +68,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mt-10 pt-6 border-t border-gray-700 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} EventHub. All rights reserved.
+          &copy; {new Date().getFullYear()} Event Discovery. All rights reserved.
         </div>
       </div>
     </footer>

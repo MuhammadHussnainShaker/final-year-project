@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EventHub - Discover Events Near You",
+  title: "Event Discovery - Discover Events Near You",
   description: "Find and join amazing events in your city",
 };
 

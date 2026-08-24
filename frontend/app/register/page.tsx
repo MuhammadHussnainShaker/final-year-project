@@ -97,7 +97,7 @@ export default function RegisterPage() {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
           <CardDescription>
-            Join EventHub and discover events near you
+            Join Event Discovery and discover events near you
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
