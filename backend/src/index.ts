@@ -102,8 +102,8 @@ const events = [
   },
   {
     title: 'AI & Machine Learning Conference',
-    description: 'Pakistan\'s premier AI conference bringing together researchers, engineers, and industry leaders. Talks on LLMs, computer vision, NLP, and responsible AI development.',
-    shortDescription: 'Pakistan\'s premier AI conference with talks on LLMs, CV, and NLP.',
+    description: "Pakistan's premier AI conference bringing together researchers, engineers, and industry leaders. Talks on LLMs, computer vision, NLP, and responsible AI development.",
+    shortDescription: "Pakistan's premier AI conference with talks on LLMs, CV, and NLP.",
     date: '2026-10-15',
     time: '9:00 AM - 6:00 PM',
     venue: 'NUST Convention Centre',
@@ -177,8 +177,8 @@ const events = [
   },
   {
     title: 'Charity Cricket Match',
-    description: 'Watch local celebrities and cricketers compete in a charity cricket match. All proceeds go to education for underprivileged children. Fun activities for families.',
-    shortDescription: 'Charity cricket match with celebrities. Proceeds support children\'s education.',
+    description: "Watch local celebrities and cricketers compete in a charity cricket match. All proceeds go to education for underprivileged children. Fun activities for families.",
+    shortDescription: "Charity cricket match with celebrities. Proceeds support children's education.",
     date: '2026-10-05',
     time: '3:00 PM - 8:00 PM',
     venue: 'Pindi Cricket Stadium',
@@ -241,40 +241,37 @@ export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
-    // --- Set up Public role permissions ---
+    // ─── 1. Public Role Permissions ───
+    // Always ensure API read permissions exist for the public role.
+    // Use the users-permissions service for reliability.
     const publicRole = await strapi.db.query('plugin::users-permissions.role').findOne({
       where: { type: 'public' },
     });
 
     if (publicRole) {
-      // Check if permissions already exist
-      const existingPerms = await strapi.db.query('plugin::users-permissions.permission').count({
-        where: { role: publicRole.id },
-      });
+      const apiActions = [
+        'api::event.event.find',
+        'api::event.event.findOne',
+        'api::category.category.find',
+        'api::category.category.findOne',
+      ];
 
-      if (existingPerms === 0) {
-        strapi.log.info('Setting up Public role permissions...');
-        const apiActions = [
-          'api::event.event.find',
-          'api::event.event.findOne',
-          'api::category.category.find',
-          'api::category.category.findOne',
-        ];
-        for (const action of apiActions) {
+      for (const action of apiActions) {
+        const existing = await strapi.db.query('plugin::users-permissions.permission').findOne({
+          where: { action, role: publicRole.id },
+        });
+
+        if (!existing) {
           await strapi.db.query('plugin::users-permissions.permission').create({
-            data: {
-              action,
-              role: publicRole.id,
-            },
+            data: { action, role: publicRole.id },
           });
+          strapi.log.info(`Created permission: ${action}`);
         }
-        strapi.log.info('Public role permissions configured.');
-      } else {
-        strapi.log.info('Public role permissions already exist. Skipping.');
       }
+      strapi.log.info('Public role permissions verified.');
     }
 
-    // --- Seed data ---
+    // ─── 2. Seed Data ───
     const existingCategories = await strapi.documents('api::category.category').findMany({});
     if (existingCategories.length > 0) {
       strapi.log.info('Seed data already exists. Skipping seed.');
@@ -298,7 +295,7 @@ export default {
       strapi.log.info(`Created category: ${cat.name}`);
     }
 
-    // Create events
+    // Create events with category relation
     for (const evt of events) {
       const entry = await strapi.documents('api::event.event').create({
         data: {
@@ -314,10 +311,11 @@ export default {
           ticketPrice: evt.ticketPrice,
           organizerContact: evt.organizerContact,
           isFeatured: evt.isFeatured,
+          categorySlug: evt.categorySlug,
           category: categoryMap[evt.categorySlug],
         },
       });
-      strapi.log.info(`Created event: ${evt.title}`);
+      strapi.log.info(`Created event: ${evt.title} -> ${evt.categorySlug}`);
     }
 
     strapi.log.info('Seed completed: 6 categories and 15 events created.');

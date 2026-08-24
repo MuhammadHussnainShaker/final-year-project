@@ -55,6 +55,9 @@
       "type": "boolean",
       "default": false
     },
+    "categorySlug": {
+      "type": "string"
+    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",

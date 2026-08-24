@@ -492,6 +492,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   attributes: {
     address: Schema.Attribute.Text;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
+    categorySlug: Schema.Attribute.String;
     city: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

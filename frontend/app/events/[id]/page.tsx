@@ -67,7 +67,8 @@ export default function EventDetailPage() {
     );
   }
 
-  const categoryName = event.category?.name || "Uncategorized";
+  const slugToName: Record<string, string> = { music: "Music", sports: "Sports", technology: "Technology", "art-culture": "Art & Culture", "food-drink": "Food & Drink", community: "Community" };
+  const categoryName = event.category?.name || slugToName[event.categorySlug || ""] || "Uncategorized";
   const mapsUrl = event.address
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.address)}`
     : null;

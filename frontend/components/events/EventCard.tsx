@@ -12,12 +12,25 @@ const categoryColors: Record<string, string> = {
   Community: "bg-teal-100 text-teal-700",
 };
 
+const slugToName: Record<string, string> = {
+  music: "Music",
+  sports: "Sports",
+  technology: "Technology",
+  "art-culture": "Art & Culture",
+  "food-drink": "Food & Drink",
+  community: "Community",
+};
+
+function getCategoryName(event: StrapiEvent): string {
+  return event.category?.name || slugToName[event.categorySlug || ""] || "Uncategorized";
+}
+
 function getCategoryColor(name: string): string {
   return categoryColors[name] || "bg-gray-100 text-gray-700";
 }
 
 export default function EventCard({ event }: { event: StrapiEvent }) {
-  const categoryName = event.category?.name || "Uncategorized";
+  const categoryName = getCategoryName(event);
 
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-white">

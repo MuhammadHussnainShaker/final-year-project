@@ -48,9 +48,11 @@ export default function EventsPage() {
         event.city?.toLowerCase().includes(search.toLowerCase()) ||
         event.description?.toLowerCase().includes(search.toLowerCase());
 
+      const slugToName: Record<string, string> = { music: "Music", sports: "Sports", technology: "Technology", "art-culture": "Art & Culture", "food-drink": "Food & Drink", community: "Community" };
+      const eventName = event.category?.name || slugToName[event.categorySlug || ""] || "";
       const matchesCategory =
         selectedCategory === "All" ||
-        event.category?.name === selectedCategory;
+        eventName === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });

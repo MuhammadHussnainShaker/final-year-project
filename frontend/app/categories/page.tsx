@@ -37,8 +37,11 @@ export default function CategoriesPage() {
     fetchData();
   }, []);
 
+  const nameToSlug: Record<string, string> = { Music: "music", Sports: "sports", Technology: "technology", "Art & Culture": "art-culture", "Food & Drink": "food-drink", Community: "community" };
+
   function getEventCount(categoryName: string): number {
-    return events.filter((e) => e.category?.name === categoryName).length;
+    const slug = nameToSlug[categoryName] || '';
+    return events.filter((e) => e.category?.name === categoryName || e.categorySlug === slug).length;
   }
 
   return (

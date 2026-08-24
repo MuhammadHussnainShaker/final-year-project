@@ -13,6 +13,7 @@ export interface StrapiEvent {
   ticketPrice: string;
   organizerContact: string;
   isFeatured: boolean;
+  categorySlug?: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
