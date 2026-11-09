@@ -223,6 +223,7 @@ const events = [
 ];
 
 export default {
+  // Runs before Strapi initializes; use this hook to register custom extensions or configuration.
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
